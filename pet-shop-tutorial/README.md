@@ -46,5 +46,64 @@
 ![Alt text](image.png)
 ![Alt text](image-1.png)
 
+
+---
+
+## Truffle 테스트 스크립트 작성하기 (JavaScript)
+
+이 문서는 Truffle을 사용하여 JavaScript를 이용해 스마트 컨트랙트를 테스트하는 방법에 대해 안내합니다.
+
+### 1. Truffle 프로젝트 초기화
+
+먼저, Truffle 프로젝트를 초기화해야 합니다. 다음 명령을 실행하여 Truffle 프로젝트를 생성합니다:
+
+```
+truffle init
+```
+
+### 2. 스마트 컨트랙트 및 테스트 스크립트 작성
+
+1. `contracts` 디렉토리에 스마트 컨트랙트 파일을 작성합니다.
+2. `test` 디렉토리에 테스트 스크립트 파일을 작성합니다. 테스트 스크립트 파일은 `*.test.js` 형식으로 저장해야 합니다.
+
+다음은 `SimpleStorage.sol`이라는 간단한 스마트 컨트랙트를 테스트하는 테스트 스크립트의 예입니다:
+
+```javascript
+// test/SimpleStorage.test.js
+
+const SimpleStorage = artifacts.require("SimpleStorage");
+
+contract("SimpleStorage", (accounts) => {
+  it("should set the data correctly", async () => {
+    const simpleStorageInstance = await SimpleStorage.deployed();
+
+    // 데이터를 설정하고 가져온 다음 검증하는 예제
+    await simpleStorageInstance.set(42);
+    const storedData = await simpleStorageInstance.get();
+    assert.equal(storedData, 42, "The data was not set correctly");
+  });
+});
+```
+
+### 3. 테스트 실행
+
+터미널에서 다음 명령을 실행하여 테스트를 실행합니다:
+
+```bash
+truffle test
+```
+
+이 명령은 `test` 디렉토리에 있는 모든 테스트 스크립트를 실행하고 결과를 터미널에 표시합니다.
+
+`it`과 `before`는 Mocha라는 테스트 프레임워크의 함수입니다. Truffle은 Mocha를 기반으로 테스트 스크립트를 작성할 수 있도록 지원합니다.
+
+- `it`: `it` 함수는 테스트 케이스를 정의하는 함수입니다. `it` 함수는 테스트의 설명 문자열과 테스트를 실행하는 콜백 함수를 인자로 받습니다. 테스트 케이스는 이 콜백 함수 안에서 구현되며, 테스트 결과에 대한 단언문(assertion)을 사용하여 예상 동작을 검증할 수 있습니다.
+
+- `before`: `before` 함수는 테스트 케이스 실행 이전에 한 번 실행되는 함수입니다. 일반적으로 `before` 함수 내에서는 테스트 환경을 설정하는 작업을 수행합니다. 예를 들어, 스마트 컨트랙트 인스턴스를 배포하거나 초기 상태를 설정하는 등의 작업을 `before` 함수 내에서 수행할 수 있습니다.
+
+Mocha는 테스트 스크립트의 실행 흐름을 제어하기 위해 다양한 훅(hook) 함수를 제공합니다. `beforeEach`, `after`, `afterEach` 등의 훅 함수를 사용하여 테스트 실행 전후에 특정 작업을 수행할 수도 있습니다.
+
+Truffle에서는 Mocha의 `it`과 `before` 함수를 사용하여 스마트 컨트랙트의 테스트를 구성할 수 있으며, 해당 테스트 스크립트를 `truffle test` 명령을 통해 실행할 수 있습니다.
+
 **참고 자료:**
 - [Truffle 공식 문서](https://www.trufflesuite.com/docs)
